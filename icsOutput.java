@@ -18,13 +18,23 @@ import java.io.*;
 public class icsOutput{
 	
    public static void main(String[] args){
-      LinkedList<Integer, Integer> event = new LinkedList<Integer, Integer>();
+      LinkedList<Long, Long> event = new LinkedList<Long, Long>();
+      
       String number1 = JOptionPane.showInputDialog("Please enter a start Date");
       String number2 = JOptionPane.showInputDialog("Please enter a end Date");
-      event.add(Integer.parseInt(number1),Integer.parseInt(number2));
+      event.add(Long.parseLong(number1),Long.parseLong(number2));
       number1 = JOptionPane.showInputDialog("Please enter another start Date");
       number2 = JOptionPane.showInputDialog("Please enter another end Date");
-      event.add(Integer.parseInt(number1),Integer.parseInt(number2));
+      event.add(Long.parseLong(number1),Long.parseLong(number2));
+      number1 = JOptionPane.showInputDialog("Please enter another start Date");
+      number2 = JOptionPane.showInputDialog("Please enter another end Date");
+      event.add(Long.parseLong(number1),Long.parseLong(number2));
+      number1 = JOptionPane.showInputDialog("Please enter another start Date");
+      number2 = JOptionPane.showInputDialog("Please enter another end Date");
+      event.add(Long.parseLong(number1),Long.parseLong(number2));
+      number1 = JOptionPane.showInputDialog("Please enter another start Date");
+      number2 = JOptionPane.showInputDialog("Please enter another end Date");
+      event.add(Long.parseLong(number1),Long.parseLong(number2));
       JOptionPane.showMessageDialog(null,".ics file would like this\n" + event.toString());
    }
 }//end main
@@ -66,35 +76,67 @@ class eventNode<Start, End>{
 
 class LinkedList<Start, End>{
 
-   private eventNode<Integer, Integer> head = null;
+   private eventNode<Long, Long> head = null;
    protected Integer size = new Integer(0);
 
    public LinkedList(){
    }
-   public void add(Integer start, Integer end){
+   /* this adds a node to the list
+   * also this sorts from descending order as you add to the list
+   */
+   public void add(Long start, Long end){
    
    if (head == null)
    {//if there is nothing in the list
-   head = new eventNode<Integer, Integer>(start, end, null);
+   head = new eventNode<Long, Long>(start, end, null);
    }
    else 
    {//starts the add at the next node
-   eventNode<Integer, Integer> previous = head;
-   eventNode<Integer, Integer> current = head.getNext();
-   
-   while(current != null)
-   {//if it's not at the end of the list it goes to the next object
+   eventNode<Long, Long> current = head;
+   System.out.println("number: " + current.getStart() + '\n'+ current.toString()+'\n');
+   eventNode<Long, Long> previous =  head.getNext();
+   eventNode<Long, Long> event = new eventNode<Long, Long>(start, end, null);
+  // System.out.println("number: " + event.getStart() + '\n'+event.toString()+'\n');
+   eventNode<Long, Long> temp = new eventNode<Long, Long>(null, null, null);
+   try{
+   while(event != null)
+   {//if it's at the head and compares puts best on top
+   if((current.getStart() < event.getStart()) && current == head){
+   temp = current;
+   current = event;
+   current.setNext(temp);
+   head = current;
+   System.out.println("number: " + current.getStart() +'\n'+ current.toString()+'\n');
    previous = current;
    current = current.getNext();
+   event = null;
+   }
+   else if(current.getStart() < event.getStart() && current != head && current != null){
+   System.out.println("it's greater but no tthe top");
+   temp = current;
+   previous.setNext(event);
+   current = event;
+   current.setNext(temp);
+   System.out.println("number: " + current.getStart() +'\n'+ current.toString()+'\n');
+   current = current.getNext();
+   event = null;
    }
    //adds to the end of the list
-   eventNode<Integer, Integer> event = new eventNode<Integer, Integer>(start, end, null);
-   previous.setNext(event);
+   else{
+   previous = current;
+   current = previous.getNext();
    
-   } 
+   }
+   } System.out.println("outside the loop" );
+   }catch(NullPointerException e){
+   previous.setNext(event);
+   event = null;
+   System.out.println(e);
+   
+  }
    size++;  
    }//end of add
-   
+   }
    /*
    * used to display the event stored in the list
    *
@@ -103,7 +145,7 @@ class LinkedList<Start, End>{
    public String toString()
    {
    String output = new String("");
-   eventNode<Integer, Integer> current = head;
+   eventNode<Long, Long> current = head;
    while(current != null)
    {
    output = output + current.toString() + "\n";
@@ -117,7 +159,7 @@ class LinkedList<Start, End>{
    *
    *
    */
-   public eventNode<Integer, Integer> get(Integer start) throws ListException
+   public eventNode<Long, Long> get(Long start) throws ListException
    {
    if (head == null)
    {
@@ -126,7 +168,7 @@ class LinkedList<Start, End>{
    //find node
    //counter tracks the #of loops
    Integer counter = new Integer(1);
-   eventNode<Integer, Integer> current = head;
+   eventNode<Long, Long> current = head;
    while(!current.getStart().equals(start))
    {
    ///goes to the next node
@@ -140,21 +182,21 @@ class LinkedList<Start, End>{
    *@param start is teh start date of the node
    * @excetion itemexception if a node doesnt exist with that date
    */
-   public void remove(Integer start) throws ListException
+   public void remove(Long start) throws ListException
    {
    if (head == null)
    {//check if empty list
    throw new ListException("cannot remove from an empty list!");
    }
    //if at begining of list
-   eventNode<Integer, Integer> current = head;
+   eventNode<Long, Long> current = head;
    if(current.getStart().equals(start))
    {//remove 1st node
    head = head.getNext();
    }
    else
    {//if not at the begining
-   eventNode<Integer, Integer> previous = head;
+   eventNode<Long, Long> previous = head;
    while(!current.getStart().equals(start))
    {//goes to the next node until foun
    previous = current;

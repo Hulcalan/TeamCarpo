@@ -18,9 +18,12 @@ import java.io.*;
 public class icsOutput{
 	
    public static void main(String[] args){
-      LinkedList<Long, Long> event = new LinkedList<Long, Long>();
+      LinkedList<Long, Long, String, String> event = new LinkedList<Long, Long, String, String>();
       String [] choices = {"add event", "output .ics file" , 
             "retrieve event" , "exit"};
+      String loc, clasf;
+      loc ="";
+      clasf="";
       int choice = 0;
       while(choice != choices.length){
          choice = JOptionPane.showOptionDialog(null, // put in center of
@@ -34,10 +37,12 @@ public class icsOutput{
                choices[choices.length - 1]); // default choice (last one)
          switch (choice) {
             case 0:
-               event.add(input(1),input(0));
+               event.add(input(1),input(0),inputText(clasf, 0),inputText(loc, 1));
                break;
             case 1: 
                JOptionPane.showMessageDialog(null,".ics file would like this\n" + event.toString());
+               outputFile("teamcarpo", event);
+               JOptionPane.showMessageDialog(null, "File: \"teamcarpo.ics\" outputted successfully!");
                break;
             case 2:
                JOptionPane.showMessageDialog(null,"doesn't work yet comeback later\n"); 
@@ -143,28 +148,76 @@ public class icsOutput{
             day[0]); // Initial choice
       }
       //puts them all together
-      input = input+input2+input3;
+      if (start == 1){
+    	  input = input+ input2+ input3 + "083500";
+       }
+       else{
+    	   input = input+input2+input3+ "141000";
+       }
+      
       //makes it into a long and returns to main
       long inputNum = Long.parseLong(input);
       return inputNum;
    }
+   public static String inputText(String here, Integer check){
+	   if(check == 1){//if location
+	       String[] choices = {" ","Uh Manoa"};
+	 		      here = (String) JOptionPane.showInputDialog(null, "chose a classification...",
+	 		         "Please choose from the following" , JOptionPane.QUESTION_MESSAGE, null, 
+	 		         choices, // Array of choices
+	 		         choices[0]); // Initial choice
+	 		      if (here == "Uh Manoa"){
+	 		    	  here = "21.299816;-157.817579";
+	 		      }         
+	   }
+	   if(check == 0){//if classification  "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
+		   //choose a year... should think about making the choices longer but meh
+		      String[] choices = {" ","PUBLIC", "PRIVATE", "CONFIDENTIAL"};
+		      here = (String) JOptionPane.showInputDialog(null, "chose a classification...",
+		         "Please choose from the following" , JOptionPane.QUESTION_MESSAGE, null, 
+		         choices, // Array of choices
+		         choices[0]); // Initial choice
+		   
+	   }
+	   return here;
+   }
+   private static void outputFile(String filename,  LinkedList<Long, Long, String, String> event ){
+	   try{
+		   PrintWriter fileWriter = new PrintWriter(filename + ".ics");
+		   fileWriter.append(event.toString());
+		   fileWriter.flush();fileWriter.close();
+	   }
+	   catch(IOException e){
+		   System.out.println("put a file name there dummy");
+	   }
+   }
+   
 }//end main
 
 //creation of a single event
-class eventNode<Start, End>{
+class eventNode<Start, End, Clasf, Loc>{
 	
    protected Start start;
    protected End end;
-   protected eventNode<Start, End> next;
+   protected Clasf clasf;
+   protected Loc loc;
+   protected eventNode<Start, End, Clasf, Loc> next;
 	
-   public eventNode(Start start2, End end2, eventNode<Start, End> next2){
+   public eventNode(Start start2, End end2, Clasf clasf2, Loc loc2, eventNode<Start, End, Clasf, Loc> next2){
       start = start2;
       end = end2;
       next = next2;
-   	
+      clasf = clasf2;
+      loc = loc2;
+   	  
    }//end constructor
    public String toString(){
-      String event = "DTSTART:" + start.toString() + "\nDTEND:" + end.toString();
+	   //these add the necessary T and Zulu components to the date lines
+	  String startD = start.toString().substring(0,8)+ "T" + start.toString().substring(8,start.toString().length()) + "Z";
+      String endD = end.toString().substring(0,8)+ "T" + end.toString().substring(8,start.toString().length()) + "Z";
+      String classif = clasf.toString();
+	  String event = "BEGIN:VEVENT\n" + "DTSTART:" + startD + "\nDTEND:" + endD +  "\nCLASS:" + classif + "\nDESCRIPTION:"
+                      + "\nGEO:" + loc.toString() + "\nEND:VEVENT";
       return event;
    }//end toString()
    
@@ -175,19 +228,25 @@ class eventNode<Start, End>{
    public End getEnd(){
       return end;
    }
+   public Loc getLoc(){
+	      return loc;
+	   }
+   public Clasf getClasf(){
+	      return clasf;
+	   }
    
-   public eventNode<Start, End> getNext(){
+   public eventNode<Start, End, Clasf, Loc> getNext(){
       return next;
    }
    
-   public void setNext(eventNode<Start, End> next2){
+   public void setNext(eventNode<Start, End, Clasf, Loc> next2){
       next = next2;
    }
 }//end of class eventNode
 
-class LinkedList<Start, End>{
+class LinkedList<Start, End, Clasf, Loc>{
 
-   private eventNode<Long, Long> head = null;
+   private eventNode<Long, Long, String, String> head = null;
    protected Integer size = new Integer(0);
 
    public LinkedList(){
@@ -195,20 +254,17 @@ class LinkedList<Start, End>{
    /* this adds a node to the list
    * also this sorts from descending order as you add to the list
    */
-   public void add(Long start, Long end){//starts add
-      eventNode<Long, Long> event = new eventNode<Long, Long>(start, end, null);
+   public void add(Long start, Long end, String clasf, String loc){//starts add
+      eventNode<Long, Long, String, String> event = new eventNode<Long, Long, String, String>(start, end, clasf, loc, null);
       if (event.getStart() < event.getEnd()){//checks if end is smaller than start
          if (head == null){//if there is nothing in the list
-            head = new eventNode<Long, Long>(start, end, null);
+            head = new eventNode<Long, Long, String, String>(start, end, clasf, loc, null);
          }
          else 
          {//starts the add at the next node
-            eventNode<Long, Long> current = head;
-            System.out.println("number: " + current.getStart() + '\n'+ current.toString()+'\n');
-            eventNode<Long, Long> previous =  head.getNext();
-         
-         // System.out.println("number: " + event.getStart() + '\n'+event.toString()+'\n');
-            eventNode<Long, Long> temp = new eventNode<Long, Long>(null, null, null);
+            eventNode<Long, Long, String, String> current = head;
+            eventNode<Long, Long, String, String> previous =  head.getNext();
+            eventNode<Long, Long, String, String> temp = new eventNode<Long, Long, String, String>(null, null, null, null, null);
             try{
                while(event != null)
                {//if it's at the head and compares puts best on top
@@ -217,18 +273,15 @@ class LinkedList<Start, End>{
                      current = event;
                      current.setNext(temp);
                      head = current;
-                     System.out.println("number: " + current.getStart() +'\n'+ current.toString()+'\n');
                      previous = current;
                      current = current.getNext();
                      event = null;
                   }
                   else if(current.getStart() < event.getStart() && current != head && current != null){
-                     System.out.println("it's greater but no tthe top");
                      temp = current;
                      previous.setNext(event);
                      current = event;
                      current.setNext(temp);
-                     System.out.println("number: " + current.getStart() +'\n'+ current.toString()+'\n');
                      current = current.getNext();
                      event = null;
                   }
@@ -238,7 +291,7 @@ class LinkedList<Start, End>{
                      current = previous.getNext();
                   
                   }
-               } System.out.println("outside the loop" );
+               } 
             }
             catch(NullPointerException e){
                previous.setNext(event);
@@ -263,12 +316,15 @@ class LinkedList<Start, End>{
    public String toString()
    {
       String output = new String("");
-      eventNode<Long, Long> current = head;
+      eventNode<Long, Long, String, String> current = head;
+      output = "BEGIN:VCALENDAR\nCALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\nX-WR-TIMEZONE:Pacific/Honolulu\n"; 
+    		 
       while(current != null)
       {
          output = output + current.toString() + "\n";
          current = current.getNext();
       }
+      output = output + "END:VCALENDAR";
       return output;
    }//end of toString
    
@@ -277,7 +333,7 @@ class LinkedList<Start, End>{
    *
    *
    */
-   public eventNode<Long, Long> get(Long start) throws ListException
+   public eventNode<Long, Long, String, String> get(Long start) throws ListException
    {
       if (head == null)
       {
@@ -286,7 +342,7 @@ class LinkedList<Start, End>{
    //find node
    //counter tracks the #of loops
       Integer counter = new Integer(1);
-      eventNode<Long, Long> current = head;
+      eventNode<Long, Long, String, String> current = head;
       while(!current.getStart().equals(start))
       {
       ///goes to the next node
@@ -307,14 +363,14 @@ class LinkedList<Start, End>{
          throw new ListException("cannot remove from an empty list!");
       }
    //if at begining of list
-      eventNode<Long, Long> current = head;
+      eventNode<Long, Long, String, String> current = head;
       if(current.getStart().equals(start))
       {//remove 1st node
          head = head.getNext();
       }
       else
       {//if not at the begining
-         eventNode<Long, Long> previous = head;
+         eventNode<Long, Long, String, String> previous = head;
          while(!current.getStart().equals(start))
          {//goes to the next node until foun
             previous = current;

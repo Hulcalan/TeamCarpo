@@ -1,3 +1,5 @@
+package src;
+
    
 /**
  * purpose of the program is to collect input for an Ical event
@@ -12,7 +14,7 @@
  *
  */
 import javax.swing.JOptionPane;
-import java.util.*;
+//import java.util.*;
 import java.io.*;
 
 public class icsOutput{
@@ -20,7 +22,7 @@ public class icsOutput{
    public static void main(String[] args){
       LinkedList<Long, Long, String, String> event = new LinkedList<Long, Long, String, String>();
       String [] choices = {"add event", "output .ics file" , 
-            "retrieve event" , "exit"};
+            "retrieve list" , "exit"};
       String loc, clasf;
       loc ="";
       clasf="";
@@ -45,7 +47,8 @@ public class icsOutput{
                JOptionPane.showMessageDialog(null, "File: \"teamcarpo.ics\" outputted successfully!");
                break;
             case 2:
-               JOptionPane.showMessageDialog(null,"doesn't work yet comeback later\n"); 
+               JOptionPane.showMessageDialog(null,".ics file would like this\n" + event.toString());
+               
                break;
             case 3:
                choice = choices.length;
@@ -149,47 +152,47 @@ public class icsOutput{
       }
       //puts them all together
       if (start == 1){
-    	  input = input+ input2+ input3 + "083500";
-       }
-       else{
-    	   input = input+input2+input3+ "141000";
-       }
+         input = input+ input2+ input3 + "083500";
+      }
+      else{
+         input = input+input2+input3+ "141000";
+      }
       
       //makes it into a long and returns to main
       long inputNum = Long.parseLong(input);
       return inputNum;
    }
    public static String inputText(String here, Integer check){
-	   if(check == 1){//if location
-	       String[] choices = {" ","Uh Manoa"};
-	 		      here = (String) JOptionPane.showInputDialog(null, "chose a classification...",
-	 		         "Please choose from the following" , JOptionPane.QUESTION_MESSAGE, null, 
-	 		         choices, // Array of choices
-	 		         choices[0]); // Initial choice
-	 		      if (here == "Uh Manoa"){
-	 		    	  here = "21.299816;-157.817579";
-	 		      }         
-	   }
-	   if(check == 0){//if classification  "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
-		   //choose a year... should think about making the choices longer but meh
-		      String[] choices = {" ","PUBLIC", "PRIVATE", "CONFIDENTIAL"};
-		      here = (String) JOptionPane.showInputDialog(null, "chose a classification...",
-		         "Please choose from the following" , JOptionPane.QUESTION_MESSAGE, null, 
-		         choices, // Array of choices
-		         choices[0]); // Initial choice
-		   
-	   }
-	   return here;
+      if(check == 1){//if location
+         String[] choices = {" ","Uh Manoa"};
+         here = (String) JOptionPane.showInputDialog(null, "chose a classification...",
+                  "Please choose from the following" , JOptionPane.QUESTION_MESSAGE, null, 
+                  choices, // Array of choices
+                  choices[0]); // Initial choice
+         if (here == "Uh Manoa"){
+            here = "21.299816;-157.817579";
+         }         
+      }
+      if(check == 0){//if classification  "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
+         //choose a year... should think about making the choices longer but meh
+         String[] choices = {" ","PUBLIC", "PRIVATE", "CONFIDENTIAL"};
+         here = (String) JOptionPane.showInputDialog(null, "chose a classification...",
+               "Please choose from the following" , JOptionPane.QUESTION_MESSAGE, null, 
+               choices, // Array of choices
+               choices[0]); // Initial choice
+         
+      }
+      return here;
    }
    private static void outputFile(String filename,  LinkedList<Long, Long, String, String> event ){
-	   try{
-		   PrintWriter fileWriter = new PrintWriter(filename + ".ics");
-		   fileWriter.append(event.toString());
-		   fileWriter.flush();fileWriter.close();
-	   }
-	   catch(IOException e){
-		   System.out.println("put a file name there dummy");
-	   }
+      try{
+         PrintWriter fileWriter = new PrintWriter(filename + ".ics");
+         fileWriter.append(event.toString());
+         fileWriter.flush();fileWriter.close();
+      }
+      catch(IOException e){
+         System.out.println("put a file name there dummy");
+      }
    }
    
 }//end main
@@ -212,11 +215,11 @@ class eventNode<Start, End, Clasf, Loc>{
    	  
    }//end constructor
    public String toString(){
-	   //these add the necessary T and Zulu components to the date lines
-	  String startD = start.toString().substring(0,8)+ "T" + start.toString().substring(8,start.toString().length()) + "Z";
+      //these add the necessary T and Zulu components to the date lines
+      String startD = start.toString().substring(0,8)+ "T" + start.toString().substring(8,start.toString().length()) + "Z";
       String endD = end.toString().substring(0,8)+ "T" + end.toString().substring(8,start.toString().length()) + "Z";
       String classif = clasf.toString();
-	  String event = "BEGIN:VEVENT\n" + "DTSTART:" + startD + "\nDTEND:" + endD +  "\nCLASS:" + classif + "\nDESCRIPTION:"
+      String event = "BEGIN:VEVENT\n" + "DTSTART:" + startD + "\nDTEND:" + endD +  "\nCLASS:" + classif + "\nDESCRIPTION:"
                       + "\nGEO:" + loc.toString() + "\nEND:VEVENT";
       return event;
    }//end toString()
@@ -229,11 +232,11 @@ class eventNode<Start, End, Clasf, Loc>{
       return end;
    }
    public Loc getLoc(){
-	      return loc;
-	   }
+      return loc;
+   }
    public Clasf getClasf(){
-	      return clasf;
-	   }
+      return clasf;
+   }
    
    public eventNode<Start, End, Clasf, Loc> getNext(){
       return next;
@@ -265,31 +268,47 @@ class LinkedList<Start, End, Clasf, Loc>{
             eventNode<Long, Long, String, String> current = head;
             eventNode<Long, Long, String, String> previous =  head.getNext();
             eventNode<Long, Long, String, String> temp = new eventNode<Long, Long, String, String>(null, null, null, null, null);
+            eventNode<Long, Long, String, String> temp2 = new eventNode<Long, Long, String, String>(null, null, null, null, null);
             try{
                while(event != null)
                {//if it's at the head and compares puts best on top
-                  if((current.getStart() < event.getStart()) && current == head){
+                  if((head.getStart() > event.getStart()) && (current.getStart() != event.getStart())){
+                     
                      temp = current;
+                     temp2 = current.getNext();
                      current = event;
-                     current.setNext(temp);
+                     current.setNext(temp2);
                      head = current;
-                     previous = current;
-                     current = current.getNext();
-                     event = null;
+                     previous = head;
+                     event = temp;
+                     event.setNext(null);
+                     
                   }
-                  else if(current.getStart() < event.getStart() && current != head && current != null){
+                  //compares and puts the least before the greatest
+                  else if((current.getStart() > event.getStart()) && (current.getStart() != event.getStart()) && (current.getStart() != head.getStart())){
+                    
                      temp = current;
-                     previous.setNext(event);
+                     temp2 = current.getNext();
                      current = event;
-                     current.setNext(temp);
-                     current = current.getNext();
-                     event = null;
+                     current.setNext(temp2);
+                     previous.setNext(current);
+                     
+                     event = temp;
+                     event.setNext(null);
                   }
+                  //if the current is smaller than the addition moves to the next one
+                  else if( current.getStart() < event.getStart() && (current.getNext() != null))
+                  {
+                  
+                     current = current.getNext();
+                  
+                  
+                  }
+                  
                   //adds to the end of the list
                   else{
-                     previous = current;
-                     current = previous.getNext();
-                  
+                     current.setNext(event);
+                     event = null;
                   }
                } 
             }

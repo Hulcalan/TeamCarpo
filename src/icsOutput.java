@@ -406,6 +406,11 @@ class LinkedList<Start, End, Clasf, Loc>{
  */
 class ListException extends RuntimeException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * @param message describes the exact cause of the error.
 	 */
    public ListException(String message) {

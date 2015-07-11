@@ -171,7 +171,11 @@ public class icsOutput{
                   choices[0]); // Initial choice
          if (here == "Uh Manoa"){
             here = "21.299816;-157.817579";
-         }         
+         }   
+         else
+         {
+        	 here = "00.000000;-00.000000";
+         }
       }
       if(check == 0){//if classification  "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
          //choose a year... should think about making the choices longer but meh
@@ -391,7 +395,7 @@ class LinkedList<Start, End, Clasf, Loc>{
       {//if not at the begining
          eventNode<Long, Long, String, String> previous = head;
          while(!current.getStart().equals(start))
-         {//goes to the next node until foun
+         {//goes to the next node until found
             previous = current;
             current = current.getNext();
          }

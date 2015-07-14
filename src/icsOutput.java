@@ -1,4 +1,5 @@
-package src;
+
+
 
 /**
  * purpose of the program is to collect input for an Ical event
@@ -12,30 +13,36 @@ package src;
  *  @Date:  7/11/2015
  *
  */
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class icsOutput {
 
 	public static void main(String[] args) {
-		UIManager.put("OptionPane.background", Color.black);
-		UIManager.put("Panel.background", Color.white);
-		gui TeamCarpo = new gui();
+
+		new gui();
 
 	}
 }
 
-/*
- * method for the input for add event so our main isn't super cluddered
- */
-
 class gui {
+	private static BufferedImage bg;
 
 	public gui() {
+		UIManager.put("OptionPane.background", Color.black);
+		UIManager.put("Label.foreground", Color.white);
+		UIManager.put("Panel.background", Color.black);
+        UIManager.put("OptionPane.messageForeground", Color.white);
 		LinkedList<Long, Long, String, String, String, String, String, String> event = new LinkedList<Long, Long, String, String, String, String, String, String>();
 		String[] choices = { "add event", "output .ics file", "retrieve list",
 				"exit" };
@@ -43,16 +50,18 @@ class gui {
 		int choice = 0;
 		while (choice != choices.length) {
 
-			choice = JOptionPane.showOptionDialog(null, // put in center of
-					// screen
-					"Welcome to the event Creator, Select a Command", // message to user
-					"ICal event creator", // title of window
-					JOptionPane.YES_NO_CANCEL_OPTION, // type of option
-					JOptionPane.PLAIN_MESSAGE,
-					// type of message
-					null, // icon
-					choices, // array of strings
-					choices[choices.length - 1]); // default choice (last one)
+			choice = JOptionPane
+					.showOptionDialog(null, // put in center of
+							// screen
+							"<html><font color = \"white\">Welcome to the event Creator, Select a Command</font></html>", // message
+							"ICal event creator", // title of window
+							JOptionPane.YES_NO_CANCEL_OPTION, // type of option
+							JOptionPane.PLAIN_MESSAGE,
+							// type of message
+							null, // icon
+							choices, // array of strings
+							choices[choices.length - 1]); // default choice
+															// (last one)
 			switch (choice) {
 			case 0:
 
@@ -61,49 +70,63 @@ class gui {
 					gui.input(event);
 
 				} catch (NumberFormatException e) {
-					JOptionPane.showConfirmDialog(null,
-							"You did not enter a start/end date!", "NOTICE!",
-							JOptionPane.PLAIN_MESSAGE,
-							JOptionPane.PLAIN_MESSAGE, null);
+					JOptionPane
+							.showConfirmDialog(
+									null,
+									"<html><font color = \"white\">\tYou did not enter a start/end date!</font>",
+									"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+									JOptionPane.PLAIN_MESSAGE, null);
 				}
 				break;
 			case 1:
 				try {
 					JOptionPane.showConfirmDialog(null,
-							".ics file would like this\n" + event.toString(),
-							"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+							"<html><font color = \"white\">.ics file would like this\n"
+									+ event.toString(), "NOTICE!",
+							JOptionPane.PLAIN_MESSAGE,
 							JOptionPane.PLAIN_MESSAGE, null);
 					outputFile("teamcarpo", event);
-					JOptionPane.showConfirmDialog(null,
-							"File: \"teamcarpo.ics\" outputted successfully!",
-							"NOTICE!", JOptionPane.PLAIN_MESSAGE,
-							JOptionPane.PLAIN_MESSAGE, null);
+					JOptionPane
+							.showConfirmDialog(
+									null,
+									"<html><font color = \"white\">File: \"teamcarpo.ics\" outputted successfully!</font>",
+									"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+									JOptionPane.PLAIN_MESSAGE, null);
 
 				} catch (NullPointerException e) {
-					JOptionPane.showConfirmDialog(null,
-							"There is nothing to output, calender is empty",
-							"NOTICE!", JOptionPane.PLAIN_MESSAGE,
-							JOptionPane.PLAIN_MESSAGE, null);
+					JOptionPane
+							.showConfirmDialog(
+									null,
+									"<html><font color = \"white\">There is nothing to output, calender is empty</font>",
+									"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+									JOptionPane.PLAIN_MESSAGE, null);
 				}
 				break;
 			case 2:
 				try {
-					JOptionPane.showMessageDialog(null,
-							".ics file would like this\n" + event.toString());
-				} catch (NullPointerException e) {
 					JOptionPane.showConfirmDialog(null,
-							"There is nothing to output, calender is empty",
-							"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+							"<html><font color = \"white\">.ics file would like this\n"
+									+ event.toString() , "NOTICE!",
+							JOptionPane.PLAIN_MESSAGE,
 							JOptionPane.PLAIN_MESSAGE, null);
+				} catch (NullPointerException e) {
+					JOptionPane
+							.showConfirmDialog(
+									null,
+									"<html><font color = \"white\">There is nothing to output, calender is empty</font>",
+									"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+									JOptionPane.PLAIN_MESSAGE, null);
 				}
 
 				break;
 			case 3:
 				choice = choices.length;
-				JOptionPane.showConfirmDialog(null,
-						"Exiting, have a nice day!", "GoodBye!",
-						JOptionPane.PLAIN_MESSAGE, JOptionPane.PLAIN_MESSAGE,
-						null);
+				JOptionPane
+						.showConfirmDialog(
+								null,
+								"<html><font color = \"white\">Exiting, have a nice day!</font>",
+								"GoodBye!", JOptionPane.PLAIN_MESSAGE,
+								JOptionPane.PLAIN_MESSAGE, null);
 				break;
 
 			default:
@@ -122,6 +145,7 @@ class gui {
 			LinkedList<Long, Long, String, String, String, String, String, String> event)
 
 	{// the menus the construct a start or end long type integer
+
 		int check = 1;
 
 		String timezone = "";
@@ -133,6 +157,7 @@ class gui {
 		String description = "";
 		String summary = "";
 		String secs = "00";
+
 		String[] tzchoices = { "Eastern", "Central", "Mountain", "Pacific",
 				"Alaska", "Hawaii" };
 		String[] time = { "00", "01", "02", "03", "04", "05", "06", "07", "08",
@@ -151,7 +176,7 @@ class gui {
 		for (int i = 0; i < 12; i++) {
 			month[i] = time[i + 1];
 		}
-
+         //day strings
 		final String[] day31 = new String[31];
 		for (int i = 0; i < 31; i++) {
 			day31[i] = time[i + 1];
@@ -171,7 +196,8 @@ class gui {
 		for (int i = 0; i < 30; i++) {
 			day30[i] = time[i + 1];
 		}
-
+		
+        //strings for hours
 		String[] hours = new String[24];
 		for (int i = 0; i < 24; i++) {
 			hours[i] = time[i];
@@ -180,6 +206,7 @@ class gui {
 		String[] locations = { " ", "Uh Manoa" };
 		// strings for classifications
 		String[] classifc = { " ", "PUBLIC", "PRIVATE", "CONFIDENTIAL" };
+		
 		final DefaultComboBoxModel<String> treeone = new DefaultComboBoxModel<>(
 				day31);
 		final DefaultComboBoxModel<String> twonine = new DefaultComboBoxModel<>(
@@ -202,9 +229,33 @@ class gui {
 		JComboBox<String> geob = new JComboBox<>(locations);
 		JComboBox<String> classifb = new JComboBox<>(classifc);
 
-		JPanel startPanel = new JPanel();
+		try {
+			bg = ImageIO.read(gui.class.getResource("/src/test.jpg"));
+		} catch (NullPointerException e) {
+		} catch (IOException ex) {
+		} catch (IllegalArgumentException e) {
+		}
+
+		JPanel startPanel = new JPanel() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+			}
+
+			@Override
+			public Dimension getPreferredSize() {
+				return new Dimension(560, 250);
+			}
+		};
 		startPanel.setPreferredSize(new Dimension(560, 250));
-		// startPanel.setLayout(null);
+		startPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+
 		JLabel title = new JLabel("Enter an event title:");
 		startPanel.add(title);
 		title.setOpaque(true);
@@ -213,7 +264,7 @@ class gui {
 		title.setPreferredSize(new Dimension(110, 20));
 		JTextField titlet = new JTextField("");
 		titlet.setEditable(true);
-		titlet.setPreferredSize(new Dimension(420, 20));
+		titlet.setPreferredSize(new Dimension(440, 20));
 		startPanel.add(titlet);
 		JLabel alan = new JLabel("Enter a start date:");
 		startPanel.add(alan);
@@ -221,7 +272,9 @@ class gui {
 		alan.setHorizontalAlignment(JLabel.CENTER);
 		alan.setBackground(Color.black);
 		alan.setForeground(Color.white);
-		startPanel.add(new JLabel("year:"));
+		JLabel year = new JLabel("Year:");
+		startPanel.add(year);
+		year.setForeground(Color.white);
 		startPanel.add(yearb);
 		yearb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -231,9 +284,13 @@ class gui {
 				}
 			}
 		});
-		startPanel.add(new JLabel("Month:"));
+		JLabel mon = new JLabel("Month:");
+		startPanel.add(mon);
+		mon.setForeground(Color.white);
 		startPanel.add(monthb);
-		startPanel.add(new JLabel("Day:"));
+		JLabel day = new JLabel("Day:");
+		startPanel.add(day);
+		day.setForeground(Color.white);
 		startPanel.add(dayb);
 		monthb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -257,15 +314,18 @@ class gui {
 						|| monthb.getSelectedItem() == "07"
 						|| monthb.getSelectedItem() == "08"
 						|| monthb.getSelectedItem() == "12") {
-					System.out.println("thirty days");
-					dayb.setModel(treeone);
+				  dayb.setModel(treeone);
 				}
 			}
 		});
 
-		startPanel.add(new JLabel("Hours: "));
+		JLabel hour = new JLabel("Hours:");
+		startPanel.add(hour);
+		hour.setForeground(Color.white);
 		startPanel.add(hoursb);
-		startPanel.add(new JLabel("Mins: "));
+		JLabel min = new JLabel("Mins:");
+		startPanel.add(min);
+		min.setForeground(Color.white);
 		startPanel.add(minsb);
 
 		// end part of the pane
@@ -275,7 +335,9 @@ class gui {
 		endl.setHorizontalAlignment(JLabel.CENTER);
 		endl.setBackground(Color.black);
 		endl.setForeground(Color.white);
-		startPanel.add(new JLabel("year:"));
+		year = new JLabel("Year:");
+		startPanel.add(year);
+		year.setForeground(Color.white);
 		startPanel.add(yearbe);
 		yearb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -285,9 +347,13 @@ class gui {
 				}
 			}
 		});
-		startPanel.add(new JLabel("Month:"));
+		mon = new JLabel("Month:");
+		startPanel.add(mon);
 		startPanel.add(monthbe);
-		startPanel.add(new JLabel("Day:"));
+		mon.setForeground(Color.white);
+		day = new JLabel("Day:");
+		startPanel.add(day);
+		day.setForeground(Color.white);
 		startPanel.add(daybe);
 		monthbe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -311,31 +377,54 @@ class gui {
 						|| monthbe.getSelectedItem() == "07"
 						|| monthbe.getSelectedItem() == "08"
 						|| monthbe.getSelectedItem() == "12") {
-					System.out.println("thirty days");
 					daybe.setModel(treeone);
 				}
 			}
 		});
 
-		startPanel.add(new JLabel("Hours: "));
+		hour = new JLabel("Hours:");
+		startPanel.add(hour);
+		hour.setForeground(Color.white);
 		startPanel.add(hoursbe);
-		startPanel.add(new JLabel("Mins: "));
+
+		min = new JLabel("Mins:");
+		startPanel.add(min);
+		min.setForeground(Color.white);
 		startPanel.add(minsbe);
-		startPanel.add(new JLabel("Timezone: "));
+
+		min = new JLabel("Timezone:");
+		startPanel.add(min);
+		min.setForeground(Color.white);
 		startPanel.add(tzbox);
-		startPanel.add(new JLabel("Closest City:"));
+		min = new JLabel("Closest City:");
+		startPanel.add(min);
+		min.setForeground(Color.white);
 		startPanel.add(geob);
-		startPanel.add(new JLabel("Classification:"));
+		min = new JLabel("Classification:");
+		startPanel.add(min);
+		min.setForeground(Color.white);
 		startPanel.add(classifb);
 		JLabel descrips = new JLabel("<html><p>Description:</p> <p> "
 				+ "Enter address or anything "
 				+ "about your event here!</html><p>", SwingConstants.CENTER);
 		startPanel.add(descrips);
 		descrips.setPreferredSize(new Dimension(110, 100));
-		JTextField descrip = new JTextField("");
+
+		JTextArea descrip = new JTextArea();
+		DefaultCaret caret = (DefaultCaret) descrip.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		descrip.setEditable(true);
-		descrip.setPreferredSize(new Dimension(400, 100));
-		startPanel.add(descrip);
+		descrip.setLineWrap(true);
+		descrip.setWrapStyleWord(true);
+		descrip.setCaretPosition(descrip.getDocument().getLength());
+		descrip.setMargin(new Insets(5, 5, 5, 5));
+		JScrollPane scrollPane = new JScrollPane(descrip);
+		scrollPane.setPreferredSize(new Dimension(430, 100));
+		scrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.add(descrip);
+		scrollPane.setViewportView(descrip);
+		startPanel.add(scrollPane);
 		while (check != 0) {
 			int result = JOptionPane.showConfirmDialog(null, startPanel,
 					"Event Creator", JOptionPane.OK_CANCEL_OPTION,
@@ -381,13 +470,19 @@ class gui {
 				summary = titlet.getText();
 				event.add(Long.parseLong(startIn), Long.parseLong(endIn),
 						timezone, classif, gloc, location, description, summary);
-				
+
 				check = 0;
 			} else if (result == JOptionPane.CANCEL_OPTION) {
 				check = 0;
+			} else if (result == JOptionPane.CLOSED_OPTION) {
+				check = 0;
 			} else {
-				JOptionPane.showMessageDialog(null,
-						"End date must be longer than your start date!");
+				JOptionPane
+						.showConfirmDialog(
+								null,
+								"<html><font color = \"white\">End date must be longer than your start date!</font>",
+								"NOTICE!", JOptionPane.PLAIN_MESSAGE,
+								JOptionPane.PLAIN_MESSAGE, null);
 				check = 1;
 			}
 
@@ -395,7 +490,8 @@ class gui {
 
 	}// else
 
-	private static void outputFile(String filename,
+	private static void outputFile(
+			String filename,
 			LinkedList<Long, Long, String, String, String, String, String, String> event) {
 		try {
 			PrintWriter fileWriter = new PrintWriter(filename + ".ics");
@@ -403,7 +499,7 @@ class gui {
 			fileWriter.flush();
 			fileWriter.close();
 		} catch (IOException e) {
-			System.out.println("put a file name there dummy");
+
 		}
 	}
 }
@@ -445,9 +541,9 @@ class eventNode<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 		String classif = clasf.toString();
 		String summary = sum.toString();
 		String event = "BEGIN:VEVENT\n" + "DTSTART;" + startD + "\nDTEND;"
-				+ endD + "\nCLASS:" + classif + "\nSUMMARY:" + summary + "\nDESCRIPTION:"
-				+ des.toString() + "\nGEO:" + loc.toString() + "\nLOCATION:"
-				+ city.toString() + "\nEND:VEVENT";
+				+ endD + "\nCLASS:" + classif + "\nSUMMARY:" + summary
+				+ "\nDESCRIPTION:" + des.toString() + "\nGEO:" + loc.toString()
+				+ "\nLOCATION:" + city.toString() + "\nEND:VEVENT";
 		return event;
 	}// end toString()
 

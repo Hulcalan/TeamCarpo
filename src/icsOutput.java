@@ -6,7 +6,7 @@
  * and output a .ics file
  * 
  * @author William Alan Ulch
- * @author Stehpani Diep
+ * @author Stephani Diep
  * @author Michael Moorefield
  * 
  * @Assignment ICS 314 Team Carpo Project (Ical)
@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.Math; 
 
 public class icsOutput {
 
@@ -81,7 +82,7 @@ class gui {
 			case 1:
 				try {
 					JOptionPane.showConfirmDialog(null,
-							"<html><font color = \"white\">.ics file would like this\n"
+							"<html><font color = \"white\">.ics file would look like this\n"
 									+ event.toString(), "NOTICE!",
 							JOptionPane.PLAIN_MESSAGE,
 							JOptionPane.PLAIN_MESSAGE, null);
@@ -105,7 +106,7 @@ class gui {
 			case 2:
 				try {
 					JOptionPane.showConfirmDialog(null,
-							"<html><font color = \"white\">.ics file would like this\n"
+							"<html><font color = \"white\">.ics file would look like this\n"
 									+ event.toString() , "NOTICE!",
 							JOptionPane.PLAIN_MESSAGE,
 							JOptionPane.PLAIN_MESSAGE, null);
@@ -203,7 +204,7 @@ class gui {
 			hours[i] = time[i];
 		}
 		// strings for locations
-		String[] locations = { " ", "Uh Manoa" };
+		String[] locations = { " ", "Uh Manoa", "Uh Bookstore", "Ka Leo", "POST"};
 		// strings for classifications
 		String[] classifc = { " ", "PUBLIC", "PRIVATE", "CONFIDENTIAL" };
 		
@@ -462,9 +463,16 @@ class gui {
 				if (geob.getSelectedItem().toString() == "Uh Manoa") {
 					gloc = "21.299816;-157.817579";
 					location = geob.getSelectedItem().toString();
+				} else if (geob.getSelectedItem().toString() == "Uh Bookstore"){
+					gloc = "21.2980320;-157.8185900";
+				} else if (geob.getSelectedItem().toString() == "Ka Leo"){
+					gloc = "21.2971940;-157.8151930";
+				} else if (geob.getSelectedItem().toString() == "POST"){
+					gloc = "21.297410;-157.816244";
 				} else {
-					gloc = "00.000000;-00.000000";
+					gloc = "00.000000;00.000000"; 
 				}
+				
 				classif = classifb.getSelectedItem().toString();
 				description = descrip.getText();
 				summary = titlet.getText();
@@ -557,6 +565,14 @@ class eventNode<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 
 	public Loc getLoc() {
 		return loc;
+	}
+	
+	public void setDes(Des data) {
+		des = data;
+	}
+	
+	public Des getDescrip() {
+		return des; 
 	}
 
 	public Clasf getClasf() {
@@ -734,6 +750,41 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 		}
 		size--;
 	}// end of remove
+	
+	/*Greater circle distance using Haversine formula*/
+	public double geoCalc(String location_1, String location_2) {
+		//Format strings into respective x and y doubles
+		String delims = "[;]";
+		String[] loc1 = location_1.split(delims);
+		String[] loc2 = location_2.split(delims);
+		
+		//Create 4 variables for x1, x2, y1, y2 for formula
+		double x1 = Double.parseDouble(loc1[0]);
+		double y1 = Double.parseDouble(loc1[1]);
+		double x2 = Double.parseDouble(loc2[0]);
+		double y2 = Double.parseDouble(loc2[1]);
+		
+		/*Haversine formula:	
+		a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+		c = 2 ⋅ asin( √a, √(1−a) )
+		d = R ⋅ c
+		where φ is latitude, λ is longitude, R is earth’s radius
+		each degree on a great circle of Earth is 69.1105 miles
+		note that angles need to be in radians to pass to trig functions*/
+		
+		double difference_x = Math.toRadians(x2 - x1);
+		x1 = Math.toRadians(x1);
+		x2 = Math.toRadians(x2);
+		double difference_y = Math.toRadians(y2 - y1);
+		double radius = 69.1105; 
+		
+		double a = Math.pow(Math.sin((difference_x)/2), 2) + Math.cos(x1) * Math.cos(x2) * Math.pow(Math.sin((difference_y)/2), 2);		
+		double angle = 2 * Math.asin(Math.min(1, Math.sqrt(a)));
+		angle = Math.toDegrees(angle);
+		double distance = radius * angle;
+		
+		return distance; //in miles  
+	}
 }// end of linkedlist class
 
 /**

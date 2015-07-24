@@ -1,2 +1,4 @@
 *.class
 icsOutput.java
+*.class
+bin/gui$2.class

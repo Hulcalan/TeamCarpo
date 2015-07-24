@@ -75,11 +75,11 @@ public class icsOutputTest {
 	@Test
 	public void test8() {
 		assertEquals(testNode.getDescrip(), "Description of event");
-<<<<<<< HEAD
+
 		testNode.setDescrip("Changed description");
-=======
-		testNode.setDes("Changed description");
->>>>>>> origin/master
+
+		testNode.setDescrip("Changed description");
+
 		assertEquals(testNode.getDescrip(), "Changed description");
 	}
 	
@@ -135,7 +135,10 @@ public class icsOutputTest {
 				"CALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\nBEGIN:VEVENT\n" 
 				+ "DTSTART;Pacific/Honolulu20150718T08\n"
 				+ "DTEND;Pacific/Honolulu20150719T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Event Title\nDESCRIPTION:Description of event\nGEO:21.2971940;-157.8151930\n"
+				+ "SUMMARY:Event Title\nDESCRIPTION:Description of event"
+				+ "\nEvent TitleOccurring from 2015071808 to 2015071908."
+				+ "\nThe distance from the current event is UH Manoa to Kaleo is 0.0 feet. "
+				+ "\nWhich is about a 0.0 minute walk.\nGEO:21.2971940;-157.8151930\n"
 				+ "LOCATION:UH Manoa\nEND:VEVENT\nBEGIN:VEVENT\n"  
 				+ "DTSTART;Pacific/Honolulu20150818T08\n"
 				+ "DTEND;Pacific/Honolulu20150819T08\nCLASS:PRIVATE\n"
@@ -154,11 +157,22 @@ public class icsOutputTest {
 				"CALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\nBEGIN:VEVENT\n"  
 				+ "DTSTART;Pacific/Honolulu20150618T08\n"
 				+ "DTEND;Pacific/Honolulu20150619T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Three\nDESCRIPTION:Third event\nGEO:21.2971940;-157.8151930\n"
+				+ "SUMMARY:Three\nDESCRIPTION:Third event\n"
+				+ "ThreeOccurring from 2015061808 to 2015061908."
+				+ "\nThe distance from the current event is POST to UH Manoa is 0.0 feet. "
+				+ "\nWhich is about a 0.0 minute walk."
+				+ "\nThreeOccurring from 2015061808 to 2015061908."
+				+  "\nThe distance from the current event is POST to Kaleo is 0.0 feet. " 
+				+ "\nWhich is about a 0.0 minute walk."
+				+ "\nGEO:21.2971940;-157.8151930\n"
 				+ "LOCATION:POST\nEND:VEVENT\nBEGIN:VEVENT\n" 
 				+ "DTSTART;Pacific/Honolulu20150718T08\n"
 				+ "DTEND;Pacific/Honolulu20150719T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Event Title\nDESCRIPTION:Description of event\nGEO:21.2971940;-157.8151930\n"
+				+ "SUMMARY:Event Title\nDESCRIPTION:Description of event\n"
+				+ "Event TitleOccurring from 2015071808 to 2015071908."
+				+ "\nThe distance from the current event is UH Manoa to Kaleo is 0.0 feet. "
+				+ "\nWhich is about a 0.0 minute walk."
+				+ "\nGEO:21.2971940;-157.8151930\n"
 				+ "LOCATION:UH Manoa\nEND:VEVENT\nBEGIN:VEVENT\n"  
 				+ "DTSTART;Pacific/Honolulu20150818T08\n"
 				+ "DTEND;Pacific/Honolulu20150819T08\nCLASS:PRIVATE\n"
@@ -173,48 +187,9 @@ public class icsOutputTest {
 		assertEquals(temp, 0.06930161981156768, 0);
 	}
 	
-<<<<<<< HEAD
 
-=======
-	//Tests the ability to remove an even from the linked list based on its start date/time
-	@Test
-	public void test15(){
-		testLL.remove((long)2015061808);
-		assertEquals(testLL.toString(), "BEGIN:VCALENDAR\n" + 
-				"CALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\nBEGIN:VEVENT\n" 
-				+ "DTSTART;Pacific/Honolulu20150718T08\n"
-				+ "DTEND;Pacific/Honolulu20150719T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Event Title\nDESCRIPTION:Description of event\nGEO:21.2971940;-157.8151930\n"
-				+ "LOCATION:UH Manoa\nEND:VEVENT\nBEGIN:VEVENT\n"  
-				+ "DTSTART;Pacific/Honolulu20150818T08\n"
-				+ "DTEND;Pacific/Honolulu20150819T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Two\nDESCRIPTION:Second event\nGEO:21.2971940;-157.8151930\n"
-				+ "LOCATION:Kaleo\nEND:VEVENT\nEND:VCALENDAR");
-	}
-	
-	//Tests the method to retrieve a specific even based on start date/time
-	//Also tests to ensure the linked list is not changed by this retrieve
-	@Test
-	public void test16(){
-		eventNode temp = testLL.get((long)2015081808);
-		String tempS = temp.toString();
-		assertEquals(tempS, "BEGIN:VEVENT\n"  
-				+ "DTSTART;Pacific/Honolulu20150818T08\n"
-				+ "DTEND;Pacific/Honolulu20150819T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Two\nDESCRIPTION:Second event\nGEO:21.2971940;-157.8151930\n"
-				+ "LOCATION:Kaleo\nEND:VEVENT");
-		assertEquals(testLL.toString(), "BEGIN:VCALENDAR\n" + 
-				"CALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\nBEGIN:VEVENT\n" 
-				+ "DTSTART;Pacific/Honolulu20150718T08\n"
-				+ "DTEND;Pacific/Honolulu20150719T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Event Title\nDESCRIPTION:Description of event\nGEO:21.2971940;-157.8151930\n"
-				+ "LOCATION:UH Manoa\nEND:VEVENT\nBEGIN:VEVENT\n"  
-				+ "DTSTART;Pacific/Honolulu20150818T08\n"
-				+ "DTEND;Pacific/Honolulu20150819T08\nCLASS:PRIVATE\n"
-				+ "SUMMARY:Two\nDESCRIPTION:Second event\nGEO:21.2971940;-157.8151930\n"
-				+ "LOCATION:Kaleo\nEND:VEVENT\nEND:VCALENDAR");	
-	}
->>>>>>> origin/master
+
+
 
 	//end testing of linkedList class
 }

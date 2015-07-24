@@ -1,6 +1,4 @@
 
-
-
 /**
  * purpose of the program is to collect input for an Ical event
  * and output a .ics file
@@ -15,7 +13,9 @@
  */
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.DefaultCaret;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,7 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.Math; 
+import java.lang.Math;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class icsOutput {
 
@@ -42,8 +44,8 @@ class gui {
 	public gui() {
 		UIManager.put("OptionPane.background", Color.black);
 		UIManager.put("Label.foreground", Color.white);
-		UIManager.put("Panel.background", Color.black);
-        UIManager.put("OptionPane.messageForeground", Color.white);
+		UIManager.put("Panel.background", new ColorUIResource(0,51,25));
+		UIManager.put("OptionPane.messageForeground", Color.white);
 		LinkedList<Long, Long, String, String, String, String, String, String> event = new LinkedList<Long, Long, String, String, String, String, String, String>();
 		String[] choices = { "add event", "output .ics file", "retrieve list",
 				"exit" };
@@ -54,8 +56,8 @@ class gui {
 			choice = JOptionPane
 					.showOptionDialog(null, // put in center of
 							// screen
-							"<html><font color = \"white\">Welcome to the event Creator, Select a Command</font></html>", // message
-							"ICal event creator", // title of window
+							"<html><font color = \"white\">Welcome to the Warrior Schedule Planner, Select a Command</font></html>", // message
+							"Warrior Schedule Planner", // title of window
 							JOptionPane.YES_NO_CANCEL_OPTION, // type of option
 							JOptionPane.PLAIN_MESSAGE,
 							// type of message
@@ -86,6 +88,7 @@ class gui {
 									+ event.toString(), "NOTICE!",
 							JOptionPane.PLAIN_MESSAGE,
 							JOptionPane.PLAIN_MESSAGE, null);
+
 					outputFile("teamcarpo", event);
 					JOptionPane
 							.showConfirmDialog(
@@ -105,9 +108,10 @@ class gui {
 				break;
 			case 2:
 				try {
+
 					JOptionPane.showConfirmDialog(null,
 							"<html><font color = \"white\">.ics file would look like this\n"
-									+ event.toString() , "NOTICE!",
+									+ event.toString(), "NOTICE!",
 							JOptionPane.PLAIN_MESSAGE,
 							JOptionPane.PLAIN_MESSAGE, null);
 				} catch (NullPointerException e) {
@@ -159,8 +163,8 @@ class gui {
 		String summary = "";
 		String secs = "00";
 
-		String[] tzchoices = { "Eastern", "Central", "Mountain", "Pacific",
-				"Alaska", "Hawaii" };
+		String[] tzchoices = { "Hawaii", "Central", "Mountain", "Pacific",
+				"Alaska", "Eastern" };
 		String[] time = { "00", "01", "02", "03", "04", "05", "06", "07", "08",
 				"09", "10", "11", "12", "13", "14", "15", "16", "17", "18",
 				"19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
@@ -177,7 +181,7 @@ class gui {
 		for (int i = 0; i < 12; i++) {
 			month[i] = time[i + 1];
 		}
-         //day strings
+		// day strings
 		final String[] day31 = new String[31];
 		for (int i = 0; i < 31; i++) {
 			day31[i] = time[i + 1];
@@ -197,17 +201,18 @@ class gui {
 		for (int i = 0; i < 30; i++) {
 			day30[i] = time[i + 1];
 		}
-		
-        //strings for hours
+
+		// strings for hours
 		String[] hours = new String[24];
 		for (int i = 0; i < 24; i++) {
 			hours[i] = time[i];
 		}
 		// strings for locations
-		String[] locations = { " ", "Uh Manoa", "Uh Bookstore", "Ka Leo", "POST"};
+		String[] locations = { " ", "Campus Center", "Uh Bookstore", "Ka Leo",
+				"POST" };
 		// strings for classifications
 		String[] classifc = { " ", "PUBLIC", "PRIVATE", "CONFIDENTIAL" };
-		
+
 		final DefaultComboBoxModel<String> treeone = new DefaultComboBoxModel<>(
 				day31);
 		final DefaultComboBoxModel<String> twonine = new DefaultComboBoxModel<>(
@@ -231,7 +236,7 @@ class gui {
 		JComboBox<String> classifb = new JComboBox<>(classifc);
 
 		try {
-			bg = ImageIO.read(gui.class.getResource("/src/test.jpg"));
+			bg = ImageIO.read(gui.class.getResource("test.jpg"));
 		} catch (NullPointerException e) {
 		} catch (IOException ex) {
 		} catch (IllegalArgumentException e) {
@@ -306,7 +311,7 @@ class gui {
 						|| monthb.getSelectedItem() == "07"
 						|| monthb.getSelectedItem() == "08"
 						|| monthb.getSelectedItem() == "12") {
-				  dayb.setModel(treeone);
+					dayb.setModel(treeone);
 				}
 			}
 		});
@@ -379,7 +384,7 @@ class gui {
 		min = new JLabel("Timezone:");
 		startPanel.add(min);
 		startPanel.add(tzbox);
-		min = new JLabel("Closest City:");
+		min = new JLabel("Campus BLDG:");
 		startPanel.add(min);
 		startPanel.add(geob);
 		min = new JLabel("Classification:");
@@ -436,32 +441,33 @@ class gui {
 					timezone = "TZID=America/Los_Angeles:";
 				} else if (tzbox.getSelectedItem() == "Hawaii") {
 					timezone = "TZID=Pacific/Honolulu:";
-				} else{
+				} else {
 					timezone = "TZID=America/Ancorage:";
 				}
-				if (geob.getSelectedItem().toString() == "Uh Manoa") {
+				if (geob.getSelectedItem().toString() == "Campus Center") {
 					gloc = "21.299816;-157.817579";
 					location = geob.getSelectedItem().toString();
-				} else if (geob.getSelectedItem().toString() == "Uh Bookstore"){
+				} else if (geob.getSelectedItem().toString() == "Uh Bookstore") {
 					gloc = "21.2980320;-157.8185900";
 					location = geob.getSelectedItem().toString();
-				} else if (geob.getSelectedItem().toString() == "Ka Leo"){
+				} else if (geob.getSelectedItem().toString() == "Ka Leo") {
 					gloc = "21.2971940;-157.8151930";
 					location = geob.getSelectedItem().toString();
-				} else if (geob.getSelectedItem().toString() == "POST"){
+				} else if (geob.getSelectedItem().toString() == "POST") {
 					gloc = "21.297410;-157.816244";
 					location = geob.getSelectedItem().toString();
 				} else {
 					gloc = "00.000000;00.000000";
 					location = geob.getSelectedItem().toString();
 				}
-				
+
 				classif = classifb.getSelectedItem().toString();
 				description = descrip.getText();
 				summary = titlet.getText();
 				event.add(Long.parseLong(startIn), Long.parseLong(endIn),
 						timezone, classif, gloc, location, description, summary);
 
+				
 				check = 0;
 			} else if (result == JOptionPane.CANCEL_OPTION) {
 				check = 0;
@@ -550,12 +556,19 @@ class eventNode<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 		return loc;
 	}
 	
-	public void setDes(Des data) {
+	public Sum getSum(){
+		return sum;
+	}
+	public void setDescrip(Des data) {
 		des = data;
 	}
-	
+
+	public City getCity() {
+		return city;
+	}
+
 	public Des getDescrip() {
-		return des; 
+		return des;
 	}
 
 	public Clasf getClasf() {
@@ -589,6 +602,7 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 		// add
 		eventNode<Long, Long, String, String, String, String, String, String> event = new eventNode<Long, Long, String, String, String, String, String, String>(
 				start, end, Tzone, clasf, loc, city, des, sum, null);
+		eventNode<Long, Long, String, String, String, String, String, String> input = event;
 		if (event.getStart() < event.getEnd()) {// checks if end is smaller than
 												// start
 			if (head == null) {// if there is nothing in the list
@@ -603,34 +617,25 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 				eventNode<Long, Long, String, String, String, String, String, String> temp2 = new eventNode<Long, Long, String, String, String, String, String, String>(
 						null, null, null, null, null, null, null, null, null);
 				try {
-					while (event != null) {// if it's at the head and compares
-											// puts best on top
+					while (event != null) {
+						// if it's at the head and compares// puts best on top
 						if ((head.getStart() > event.getStart())
-								&& (current.getStart() != event.getStart())) {
-
-							temp = current;
-							temp2 = current.getNext();
-							current = event;
-							current.setNext(temp2);
-							head = current;
-							previous = head;
-							event = temp;
-							event.setNext(null);
+								|| (head.getStart() == event.getStart())) {
+							temp = head;
+							head = event;
+							head.setNext(temp);
+							event = null;
 
 						}
 						// compares and puts the least before the greatest
-						else if ((current.getStart() > event.getStart())
-								&& (current.getStart() != event.getStart())
+						else if (((current.getStart() > event.getStart()) || (current
+								.getStart() == event.getStart()))
 								&& (current.getStart() != head.getStart())) {
-
 							temp = current;
-							temp2 = current.getNext();
 							current = event;
-							current.setNext(temp2);
-							previous.setNext(current);
+							current.setNext(temp);
+							event = null;
 
-							event = temp;
-							event.setNext(null);
 						}
 						// if the current is smaller than the addition moves to
 						// the next one
@@ -643,7 +648,9 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 
 						// adds to the end of the list
 						else {
+							temp = current.getNext();
 							current.setNext(event);
+							current.getNext().setNext(temp);
 							event = null;
 						}
 					}
@@ -659,6 +666,7 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 			JOptionPane.showMessageDialog(null,
 					"Your End date must be later than your Start date");
 		}
+
 	}// end of add
 
 	/*
@@ -669,104 +677,106 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 	public String toString() {
 
 		String output = new String("");
+		addGeoToDes();
 		eventNode<Long, Long, String, String, String, String, String, String> current = head;
 		output = "BEGIN:VCALENDAR\nCALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\n";
-		if (current.getStart().toString() == "") {
-			output = "nothing here boss!";
-		} else {
-			while (current != null) {
-				output = output + current.toString() + "\n";
-				current = current.getNext();
-			}
-			output = output + "END:VCALENDAR";
+		while (current != null) {
+			output = output + current.toString() + "\n";
+
+			current = current.getNext();
 		}
+		output = output + "END:VCALENDAR";
 		return output;
 	}// end of toString
 
-	/**
-	 * gets an event based on teh date we can probably change this to something
-	 * else mebbe month?
-	 * 
-	 * 
-	 */
-	public eventNode<Long, Long, String, String, String, String, String, String> get(
-			Long start) throws ListException {
-		if (head == null) {
-			throw new ListException("Cannot get an item from an emtpy list!");
-		}
-		// find node
-		// counter tracks the #of loops
-		Integer counter = new Integer(1);
+	public void addGeoToDes() {
 		eventNode<Long, Long, String, String, String, String, String, String> current = head;
-		while (!current.getStart().equals(start)) {
-			// /goes to the next node
-			current = current.getNext();
-			counter++;
-		}
-		return current;
-	}// end of get
+		eventNode<Long, Long, String, String, String, String, String, String> next = current
+				.getNext();
+		int check = 0;
+		double currentC = 0.0;
+		double walktime = 0.0;
+		System.out.println("called");
+		System.out.println(current.getCity().toString());
 
-	/*
-	 * removes an event from the list
-	 * 
-	 * @param start is teh start date of the node
-	 * 
-	 * @excetion itemexception if a node doesnt exist with that date
-	 */
-	public void remove(Long start) throws ListException {
-		if (head == null) {// check if empty list
-			throw new ListException("cannot remove from an empty list!");
+		while (check != 1) {
+			try {
+				if (current.getLoc() == "00.000000;00.000000") {
+				check = 1;
+				}
+				if (next.getLoc() == "00.000000;00.000000") {
+					next = next.getNext();
+				}
+
+
+				else {
+					
+					currentC = geoCalc(current.getLoc(), next.getLoc());
+					BigDecimal bd = new BigDecimal(currentC);
+					bd = bd.setScale(2, RoundingMode.HALF_UP);
+					currentC = bd.doubleValue()*5280;
+					
+					walktime = (60*currentC)/(4*5260);
+					BigDecimal bd1 = new BigDecimal(walktime);
+					bd1 = bd1.setScale(2, RoundingMode.HALF_UP);
+					walktime = bd1.doubleValue();
+					System.out.println(currentC);
+					System.out.println(walktime);
+					current.setDescrip(current.getDescrip().toString()
+							+ "\n" + current.getSum().toString()
+							+ "Occurring from " + current.getStart().toString()
+							+ " to " + current.getEnd().toString() + "."
+							+ "\nThe distance from the current event is "
+							+ current.getCity().toString() + " to "
+							+ next.getCity().toString() + " is " + currentC
+							+ " feet. \nWhich is about a " + walktime + " minute walk.");
+					next = next.getNext();
+				}
+
+			} catch (NullPointerException e) {
+					check = 1;
+				}
+				
+				
+
+			
 		}
-		// if at begining of list
-		eventNode<Long, Long, String, String, String, String, String, String> current = head;
-		if (current.getStart().equals(start)) {// remove 1st node
-			head = head.getNext();
-		} else {// if not at the begining
-			eventNode<Long, Long, String, String, String, String, String, String> previous = head;
-			while (!current.getStart().equals(start)) {// goes to the next node
-														// until found
-				previous = current;
-				current = current.getNext();
-			}
-			// skips thus removing it from the list
-			previous.setNext(current.getNext());
-		}
-		size--;
-	}// end of remove
-	
-	/*Greater circle distance using Haversine formula*/
+	}
+
+	/* Greater circle distance using Haversine formula */
 	public double geoCalc(String location_1, String location_2) {
-		//Format strings into respective x and y doubles
+		// Format strings into respective x and y doubles
 		String delims = "[;]";
 		String[] loc1 = location_1.split(delims);
 		String[] loc2 = location_2.split(delims);
-		
-		//Create 4 variables for x1, x2, y1, y2 for formula
+
+		// Create 4 variables for x1, x2, y1, y2 for formula
 		double x1 = Double.parseDouble(loc1[0]);
 		double y1 = Double.parseDouble(loc1[1]);
 		double x2 = Double.parseDouble(loc2[0]);
 		double y2 = Double.parseDouble(loc2[1]);
-		
-		/*Haversine formula:	
-		a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
-		c = 2 ⋅ asin( √a, √(1−a) )
-		d = R ⋅ c
-		where φ is latitude, λ is longitude, R is earth’s radius
-		each degree on a great circle of Earth is 69.1105 miles
-		note that angles need to be in radians to pass to trig functions*/
-		
+
+		/*
+		 * Haversine formula: a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2) c =
+		 * 2 ⋅ asin( √a, √(1−a) ) d = R ⋅ c where φ is latitude, λ is longitude,
+		 * R is earth’s radius each degree on a great circle of Earth is 69.1105
+		 * miles note that angles need to be in radians to pass to trig
+		 * functions
+		 */
+
 		double difference_x = Math.toRadians(x2 - x1);
 		x1 = Math.toRadians(x1);
 		x2 = Math.toRadians(x2);
 		double difference_y = Math.toRadians(y2 - y1);
-		double radius = 69.1105; 
-		
-		double a = Math.pow(Math.sin((difference_x)/2), 2) + Math.cos(x1) * Math.cos(x2) * Math.pow(Math.sin((difference_y)/2), 2);		
+		double radius = 69.1105;
+
+		double a = Math.pow(Math.sin((difference_x) / 2), 2) + Math.cos(x1)
+				* Math.cos(x2) * Math.pow(Math.sin((difference_y) / 2), 2);
 		double angle = 2 * Math.asin(Math.min(1, Math.sqrt(a)));
 		angle = Math.toDegrees(angle);
 		double distance = radius * angle;
 		
-		return distance; //in miles  
+		return distance; // in feet;
 	}
 }// end of linkedlist class
 

@@ -723,13 +723,13 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 					System.out.println(currentC);
 					System.out.println(walktime);
 					current.setDescrip(current.getDescrip().toString()
-							+ "\n" + current.getSum().toString()
-							+ "Occurring from " + current.getStart().toString()
+						    + " " + current.getSum().toString()
+							+ " Occurring from " + current.getStart().toString()
 							+ " to " + current.getEnd().toString() + "."
-							+ "\nThe distance from the current event is "
+							+ "The distance from the current event is "
 							+ current.getCity().toString() + " to "
 							+ next.getCity().toString() + " is " + currentC
-							+ " feet. \nWhich is about a " + walktime + " minute walk.");
+							+ " feet. Which is about a " + walktime + " minute walk.");
 					next = next.getNext();
 				}
 

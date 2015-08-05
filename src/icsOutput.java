@@ -47,8 +47,7 @@ class gui {
 		UIManager.put("Panel.background", new ColorUIResource(0,51,25));
 		UIManager.put("OptionPane.messageForeground", Color.white);
 		LinkedList<Long, Long, String, String, String, String, String, String> event = new LinkedList<Long, Long, String, String, String, String, String, String>();
-		String[] choices = { "add event", "output .ics file", "retrieve list",
-				"exit" };
+		String[] choices = { "add event", "output .ics file","Exit and Output" };
 
 		int choice = 0;
 		while (choice != choices.length) {
@@ -106,25 +105,8 @@ class gui {
 									JOptionPane.PLAIN_MESSAGE, null);
 				}
 				break;
+
 			case 2:
-				try {
-
-					JOptionPane.showConfirmDialog(null,
-							"<html><font color = \"white\">.ics file would look like this\n"
-									+ event.toString(), "NOTICE!",
-							JOptionPane.PLAIN_MESSAGE,
-							JOptionPane.PLAIN_MESSAGE, null);
-				} catch (NullPointerException e) {
-					JOptionPane
-							.showConfirmDialog(
-									null,
-									"<html><font color = \"white\">There is nothing to output, calender is empty</font>",
-									"NOTICE!", JOptionPane.PLAIN_MESSAGE,
-									JOptionPane.PLAIN_MESSAGE, null);
-				}
-
-				break;
-			case 3:
 				choice = choices.length;
 				JOptionPane
 						.showConfirmDialog(
@@ -679,7 +661,7 @@ class LinkedList<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 		String output = new String("");
 		addGeoToDes();
 		eventNode<Long, Long, String, String, String, String, String, String> current = head;
-		output = "BEGIN:VCALENDAR\nCALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\n";
+		output = "BEGIN:VCALENDAR\nVERSION:2.0\nCALSCALE:GREGORIAN\nX-WR-CALNAME:Team Carpo\n";
 		while (current != null) {
 			output = output + current.toString() + "\n";
 

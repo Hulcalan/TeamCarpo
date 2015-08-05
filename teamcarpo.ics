@@ -1,27 +1,10 @@
 BEGIN:VCALENDAR
+VERSION:2.0
 CALSCALE:GREGORIAN
 X-WR-CALNAME:Team Carpo
 BEGIN:VEVENT
 DTSTART;TZID=Pacific/Honolulu:20150101T000000
-DTEND;TZID=Pacific/Honolulu:20160101T000000
-CLASS: 
-SUMMARY:test
-DESCRIPTION: test Occurring from 20150101000000 to 20160101000000.The distance from the current event is Campus Center to POST is 1003.2 feet. Which is about a 2.86 minute walk. test Occurring from 20150101000000 to 20160101000000.The distance from the current event is Campus Center to Uh Bookstore is 739.2 feet. Which is about a 2.11 minute walk. test Occurring from 20150101000000 to 20160101000000.The distance from the current event is Campus Center to POST is 1003.2 feet. Which is about a 2.86 minute walk. test Occurring from 20150101000000 to 20160101000000.The distance from the current event is Campus Center to Uh Bookstore is 739.2 feet. Which is about a 2.11 minute walk.
-GEO:21.299816;-157.817579
-LOCATION:Campus Center
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;TZID=Pacific/Honolulu:20150101T000000
-DTEND;TZID=Pacific/Honolulu:20180101T000000
-CLASS: 
-SUMMARY:
-DESCRIPTION:
-GEO:21.297410;-157.816244
-LOCATION:POST
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;TZID=Pacific/Honolulu:20150101T000000
-DTEND;TZID=Pacific/Honolulu:20170101T000000
+DTEND;TZID=Pacific/Honolulu:20150301T000000
 CLASS: 
 SUMMARY:
 DESCRIPTION:

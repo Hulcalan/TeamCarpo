@@ -47,7 +47,7 @@ class gui {
 		UIManager.put("Panel.background", new ColorUIResource(0,51,25));
 		UIManager.put("OptionPane.messageForeground", Color.white);
 		LinkedList<Long, Long, String, String, String, String, String, String> event = new LinkedList<Long, Long, String, String, String, String, String, String>();
-		String[] choices = { "add event", "output .ics file","Exit and Output" };
+		String[] choices = { "add event", "output .ics file","Exit" };
 
 		int choice = 0;
 		while (choice != choices.length) {
@@ -372,7 +372,7 @@ class gui {
 		min = new JLabel("Classification:");
 		startPanel.add(min);
 		startPanel.add(classifb);
-		JLabel descrips = new JLabel("<html><p>Description:</p> <p> "
+		JLabel descrips = new JLabel("<html><p>Comments:</p> <p> "
 				+ "Enter address or anything "
 				+ "about your event here!</html><p>", SwingConstants.CENTER);
 		startPanel.add(descrips);
@@ -521,7 +521,7 @@ class eventNode<Start, End, Tzone, Clasf, Loc, City, Des, Sum> {
 		String summary = sum.toString();
 		String event = "BEGIN:VEVENT\n" + "DTSTART;" + startD + "\nDTEND;"
 				+ endD + "\nCLASS:" + classif + "\nSUMMARY:" + summary
-				+ "\nDESCRIPTION:" + des.toString() + "\nGEO:" + loc.toString()
+				+ "\nCOMMENT:" + des.toString() + "\nGEO:" + loc.toString()
 				+ "\nLOCATION:" + city.toString() + "\nEND:VEVENT";
 		return event;
 	}// end toString()
